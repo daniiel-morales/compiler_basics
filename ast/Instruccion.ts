@@ -1,11 +1,13 @@
 import { Nodo } from "./Nodo"
 import { TYPES } from "./Nodo"
+import { Operation } from "./Operation"
 
 export class Instruccion implements Nodo {
 
     log: string
     tipo: number
     hijos:Array<Nodo>
+    operation:Operation
 
     constructor(){
         this.log = ''
@@ -16,15 +18,36 @@ export class Instruccion implements Nodo {
         this.hijos.push(n)
     }    
     execute(): any {
-
-        let exp: any
+        this.operation = new Operation()
+        let exp, exp2: any
+        let i: number = 0
 
         switch(this.getType()){
-        
-            case TYPES.SCOPE:
-                let i: number = 0
+
+            case TYPES.ADD:
+                exp = this.hijos[0].execute()
+                exp2 = this.hijos[1].execute()
+                
+            return this.operation.ADD(exp,exp2)
+
+            case TYPES.PRINT:
+                
                 while(i < this.hijos.length){
                     exp = this.getChild(i++).execute()
+                    if(exp.getType() == TYPES.ERROR)
+                        return exp
+                    console.log(exp.getValue())
+                }
+            return null
+        
+            case TYPES.SCOPE:
+                
+                while(i < this.hijos.length){
+                    exp = this.getChild(i++).execute()
+                    if(exp != null)
+                        if(exp.getType() == TYPES.ERROR)
+                            //ADD exp to SYM_TABLE Array<Node_types_error>
+                            break
                 }
             return null
 

@@ -19,10 +19,18 @@ export enum  TYPES {
     CHAR,
     BOOLEAN, 
     STRING,
-    NULL, 
+    NULL,
+    ERROR, 
     //root
     IF, 
     ELSE, 
     IF_ELSE,
+    PRINT,
+    ADD,
+    SUB,
+    MUL,
+    DIV,
+    POT,
+    MOD,
     SCOPE
 }
