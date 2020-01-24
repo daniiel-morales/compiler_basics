@@ -1,4 +1,4 @@
-import { Nodo } from "./Nodo"
+import { Nodo, TYPES } from "./Nodo"
 
 export class Expresion implements Nodo {
     
@@ -9,11 +9,18 @@ export class Expresion implements Nodo {
         this.valor = v
         this.tipo = t
     }
-
-    add(n: Nodo): void {
-        throw new Error("Not supported Method")
+    add(lex: any): void {
+        this.valor = lex
     }
-    execute(): any {
+    execute(t: import("../analisis/sym_table").sym_table): any {
+        if(this.tipo == TYPES.ID){
+            let exp: import("../analisis/sym").sym
+            exp = t.getSym(this.valor)
+            if(exp !=null){
+                return new Expresion(exp.getValue(), exp.getType())
+            }
+            return null
+        }
         return this
     }
     getChild(i: number): Nodo {
@@ -21,9 +28,6 @@ export class Expresion implements Nodo {
     }
     getSize(): number {
         return 0
-    }
-    value(lex: any): void {
-        this.valor = lex
     }
     type(c: number): void {
         this.tipo = c
