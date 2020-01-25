@@ -1,5 +1,4 @@
 import { sym } from "./sym"
-import { TYPES } from "../ast/Nodo"
 
 export class sym_table{
 

@@ -2,7 +2,6 @@ import { Nodo } from "./Nodo"
 import { TYPES } from "./Nodo"
 import { Operation } from "./Operation"
 import { sym } from "../analisis/sym"
-import { sym_table } from "../analisis/sym_table"
 import { Expresion } from "./Expresion"
 
 export class Instruccion implements Nodo {
@@ -31,22 +30,18 @@ export class Instruccion implements Nodo {
 
         switch(this.getType()){
 
+            case TYPES.IF:
+                
+            return operation.IF(this.hijos, tabla_simbolos)
+                    
+            case TYPES.ELSE:
+                //execute ELSEnode statements 
+                exp = this.hijos[0].execute(tabla_simbolos)
+            return operation.ELSE(exp)
+
             case TYPES.DECLARE:
-                //check if instance not exists
-                ins = this.hijos[0].execute(tabla_simbolos)
-                if(ins == null){
-                    //get value for the new instance
-                    exp = this.hijos[1].execute(tabla_simbolos).getValue()
-                    //get type for the new instance
-                    //need to fix if type doesnot exists and need to add that type
-                    i = this.hijos[2].getType()
 
-                    ins = new sym(this.hijos[0].getValue(), exp, i, false)
-                    tabla_simbolos.addSym(ins)
-
-                    return null
-                }
-            return new Expresion('DECLARAR>> Ya existe la variable <'+ins.getID()+'>', TYPES.ERROR)
+            return operation.DECLARE(this.hijos, tabla_simbolos)
 
             case TYPES.ADD:
                 exp = this.hijos[0].execute(tabla_simbolos)
@@ -57,7 +52,7 @@ export class Instruccion implements Nodo {
             case TYPES.PRINT:
                 
                 while(i < this.hijos.length){
-                    exp = this.getChild(i++).execute(tabla_simbolos)
+                    exp = this.hijos[i++].execute(tabla_simbolos)
                     if(exp.getType() == TYPES.ERROR)
                         return exp
                     console.log(exp.getValue())
@@ -67,7 +62,7 @@ export class Instruccion implements Nodo {
             case TYPES.SCOPE:
                 
                 while(i < this.hijos.length){
-                    exp = this.getChild(i++).execute(tabla_simbolos)
+                    exp = this.hijos[i++].execute(tabla_simbolos)
                     if(exp != null)
                         if(exp.getType() == TYPES.ERROR)
                             //ADD exp to SYM_TABLE Array<Node_types_error>
@@ -76,14 +71,8 @@ export class Instruccion implements Nodo {
             return null
 
             default:
-                return 'ERR>> Nodo no definido'
+                return new Expresion('ERR>> Nodo no definido', TYPES.ERROR)
         }
-    }
-    getChild(i: number): Nodo {
-        if(i<this.hijos.length)
-			return this.hijos[i]
-		else
-			return null;
     }
     getSize(): number {
         return this.hijos.length

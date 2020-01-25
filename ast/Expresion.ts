@@ -23,9 +23,6 @@ export class Expresion implements Nodo {
         }
         return this
     }
-    getChild(i: number): Nodo {
-        throw new Error("Not supported Method")
-    }
     getSize(): number {
         return 0
     }
