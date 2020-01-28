@@ -30,6 +30,10 @@ export class Instruccion implements Nodo {
 
         switch(this.getType()){
 
+            case TYPES.SWITCH:
+                
+            return operation.SWITCH(this.hijos, tabla_simbolos)
+            
             case TYPES.IF:
                 
             return operation.IF(this.hijos, tabla_simbolos)
@@ -63,10 +67,12 @@ export class Instruccion implements Nodo {
                 
                 while(i < this.hijos.length){
                     exp = this.hijos[i++].execute(tabla_simbolos)
-                    if(exp != null)
+                    if(exp != null){
                         if(exp.getType() == TYPES.ERROR)
                             //ADD exp to SYM_TABLE Array<Node_types_error>
                             break
+                        return exp
+                    }
                 }
             return null
 
@@ -85,5 +91,10 @@ export class Instruccion implements Nodo {
     }
     getType(): number {
         return this.tipo
+    }
+    getChild(i: number): Nodo {
+        if(i>-1 && i<this.hijos.length)
+            return this.hijos[i]
+        return null
     }
 }

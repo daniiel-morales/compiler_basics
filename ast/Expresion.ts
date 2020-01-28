@@ -35,4 +35,7 @@ export class Expresion implements Nodo {
     getType(): number {
         return this.tipo
     }
+    getChild(): Nodo {
+        throw new Error("Method not supported")
+    }
 }

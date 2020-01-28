@@ -7,7 +7,8 @@ export interface Nodo {
 	type(c: number): void
 	getValue(): any
     getType(): number
-    
+    getChild(i: number): Nodo
+
 }
 
 export enum  TYPES {
@@ -21,6 +22,9 @@ export enum  TYPES {
     ERROR, 
     BREAK,
     //root
+    SWITCH,
+    CASE,
+    DEFAULT,
     DECLARE,
     IF, 
     ELSE, 

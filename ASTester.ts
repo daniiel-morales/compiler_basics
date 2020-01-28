@@ -117,6 +117,68 @@ function test_if_else(){
         inner.execute(tabla_simbolos)
 }
 
+function test_switch(){
+
+        let inner: Instruccion = new Instruccion()
+        inner.type(TYPES.SWITCH)
+        
+        //set value for match CASEnode
+        inner.add(new Expresion(5, TYPES.NUM))
+
+
+        //first CASEnode
+        let c1: Instruccion = new Instruccion()
+        c1.type(TYPES.CASE)
+
+        c1.add(new Expresion(1, TYPES.NUM))
+
+        let c1_inst: Instruccion = new Instruccion()
+        c1_inst.type(TYPES.SCOPE)
+
+        let print: Instruccion = new Instruccion()
+        print.type(TYPES.PRINT)
+
+        print.add(new Expresion('case 1', TYPES.STRING))
+
+        c1_inst.add(print)
+
+        c1_inst.add(new Expresion('', TYPES.BREAK))
+
+        c1.add(c1_inst)
+
+        inner.add(c1)
+
+        //second CASEnode
+        let c2: Instruccion = new Instruccion()
+        c2.type(TYPES.CASE)
+
+        c2.add(new Expresion(2, TYPES.NUM))
+
+        print = new Instruccion()
+        print.type(TYPES.PRINT)
+
+        print.add(new Expresion('case 2', TYPES.STRING))
+
+        c2.add(print)
+
+        inner.add(c2)
+
+        //default CASEnode
+        let c3: Instruccion = new Instruccion()
+        c3.type(TYPES.DEFAULT)
+
+        print = new Instruccion()
+        print.type(TYPES.PRINT)
+
+        print.add(new Expresion('test_switch>> Success', TYPES.STRING))
+
+        c3.add(print)
+
+        inner.add(c3)
+
+        inner.execute(null)
+}
+
 function ASTester(){
         let result_exp: any
         
@@ -137,6 +199,8 @@ function ASTester(){
         }
 
         test_if_else()
+
+        test_switch()
         
 }
 

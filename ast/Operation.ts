@@ -85,5 +85,51 @@ export class Operation {
         
         return new Expresion('', TYPES.BREAK)
     }
+    
+    SWITCH(hijos:Array<Nodo>, tabla_simbolos:sym_table): any{
+
+        let exp: any, exp2: any
+        let i: number = 0
+
+        // value for match CASEnode
+        exp = hijos[0].execute(tabla_simbolos);
+        if (exp.getType() < 6) {
+            i = 1;
+            while (i < hijos.length) {
+                // value for match SWITCHnode value
+                exp2 = hijos[i];
+                if (exp2.getType() != TYPES.DEFAULT){
+                    //NO evaluate CASEnode match value
+                    //it has matched in a previous CASEnode without BREAKnode
+                    if(exp != true)
+                        exp2 = exp2.getChild(0).execute(tabla_simbolos)
+
+                    if (exp == true || exp.getValue() == exp2.getValue()) {
+                        exp2 = hijos[i].getChild(1).execute(tabla_simbolos)
+                        if (exp2 != null) {
+                            if (exp2.getType() == TYPES.BREAK)
+                                return null
+                            return exp2
+                        }
+                        // NO break so can execute the next cases without evaluate it
+                        exp = true
+                    }
+                //only for languajes that DEFAULTnode is the final case option
+                }else{
+                    exp2 = hijos[i].getChild(0).execute(tabla_simbolos)
+                    if (exp2 != null) {
+                        if (exp2.getType() == TYPES.BREAK)
+                            return null
+                        return exp2
+                    }
+                    //exits SWITCH even if exists more CASEnodes of SWITCH
+                    break
+                }
+                i++
+            }
+        }else
+            return new Expresion('SWITCH>> valor <'+exp.getValue()+'> no primitivo', TYPES.ERROR)
+        return null
+    }
 
 }
